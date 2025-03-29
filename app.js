@@ -1,17 +1,19 @@
 const express = require('express');
+const supabase = require('./src/config/db');
 
 const app = express();
-const PORT = 3000;
 
-// Middleware to parse JSON requests
-app.use(express.json());
+app.get('/test-db', async (req, res) => {
+    console.log("Testing Supabase connection...");
 
-// Main endpoint
-app.get('/', (req, res) => {
-    res.send('Welcome to the LockChat Backend!');
+    const { data, error } = await supabase.from('users').select('*'); // Fetch users
+
+    if (error) {
+        return res.status(500).json({ error: error.message });
+    }
+
+    res.json({ users: data });
 });
 
-// Start the server
-app.listen(PORT, () => {
-    console.log(`Server is running on http://localhost:${PORT}`);
-});
+const PORT = 5000;
+app.listen(PORT, () => console.log(`Server running on port ${PORT}`));
