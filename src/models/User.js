@@ -19,13 +19,12 @@ class User {
         return data;
     }
 
-    static async getUserByUsername(username) {
+    static async getUserByUsername(username,res) {
         const { data, error } = await supabase
             .from('users')
             .select('*')
             .eq('username', username)
             .single();
-
         if (error) {
             console.error('Error fetching user:', error);
             return null;
