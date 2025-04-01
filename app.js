@@ -15,5 +15,10 @@ app.get('/test-db', async (req, res) => {
     res.json({ users: data });
 });
 
-const PORT = 5001;
+app.use(express.json());
+
+const messageRoutes = require("./src/routes/MessageRoutes");
+app.use("/api/messages", messageRoutes);
+
+const PORT = 5000;
 app.listen(PORT, () => console.log(`Server running on port ${PORT}`));
