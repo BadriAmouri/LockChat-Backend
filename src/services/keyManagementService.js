@@ -17,7 +17,7 @@ class KeyManagementService {
         
             if (error) throw new Error('Error checking message count: ' + error.message);
         
-            return count % 4 === 0;
+            return count % 2 === 0;
         }
         
         
