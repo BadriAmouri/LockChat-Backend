@@ -1,11 +1,17 @@
 const KeyManagementService = require('../services/keyManagementService');
-
+const MessageKey = require('../models/MessageKey');
 class KeyManagementController {
     static async storeEncryptedKey(req, res) {
         try {
             const { senderId, recipientId, encryptedKeyForSender, encryptedKeyForRecipient } = req.body;
-            await KeyManagementService.storeEncryptedKey(senderId, recipientId, encryptedKeyForSender, encryptedKeyForRecipient);
-            res.json({ success: true });
+            const insertedKeyId = await MessageKey.storeEncryptedKey(
+                senderId,
+                recipientId,
+                encryptedKeyForSender,
+                encryptedKeyForRecipient
+            );
+    
+            res.json({ success: true, insertedKeyId }); // ✅ return the key ID
         } catch (error) {
             res.status(500).json({ error: error.message });
         }

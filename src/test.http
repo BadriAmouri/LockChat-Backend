@@ -1,4 +1,11 @@
 
 
-GET http://localhost:5000/api/decryption/keys/f03cc222-a66c-43a4-8d5a-75bf05f2972c
+POST  http://localhost:5000/api/encryption/storeEncryptedKey
 Content-Type: application/json
+
+{
+  "senderId": "9",
+  "recipientId": "2",
+  "encryptedKeyForSender": "oZTD/o+0vdUZr+GxcWCAktOwrzzlLVpluOfkKJREG0WOZB7cJ9QxdoLQ3z+pUsPL",
+  "encryptedKeyForRecipient": "6VSEq/TWW4yN/t2uJ15Hre4y5U5pdnbmxWpqYZGdJoL31FuM2ruUnTdAhjNLhWrL"
+}
