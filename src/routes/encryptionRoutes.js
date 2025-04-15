@@ -34,6 +34,7 @@ router.get('/getEncryptedKey', async (req, res) => {
         res.status(500).json({ error: error.message });
     }
 });
+
 router.post('/storeEncryptedKey', KeyManagementController.storeEncryptedKey);
 router.get('/users/:userId/publicKey', KeyManagementController.getPublicKey);
 

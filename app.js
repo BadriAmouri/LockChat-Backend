@@ -16,6 +16,12 @@ app.use('/api/decryption', decryptionRoutes);
 app.use('/api/encryption', encryptionRoutes); 
 
 
+app.use(express.json());
+
+
+const chatroomRoutes = require('./src/routes/chatroomRoutes');
+app.use('/api', chatroomRoutes);
+
 const PORT = 5000;
 app.listen(PORT, () => console.log(`Server running on port ${PORT}`));
 
