@@ -1,6 +1,7 @@
 const supabase = require('../config/db');
 
-class User {
+class user {
+
     static async createUser(username,email,hashedPassword,publicKey){
         const {data , error } = await supabase
         .from('users')
@@ -19,7 +20,21 @@ class User {
         return data;
     }
 
-    static async getUserByUsername(username,res) {
+    static async getUserById(userId) {
+        const { data, error } = await supabase
+            .from('users')
+            .select('*')
+            .eq('user_id', userId)
+            .single();
+    
+        if (error) {
+            console.error('Error fetching user by ID:', error);
+            return null;
+        }
+        return data;
+    }
+    
+    static async getUserByUsername(username) {
         const { data, error } = await supabase
             .from('users')
             .select('*')
@@ -29,8 +44,74 @@ class User {
             console.error('Error fetching user:', error);
             return null;
         }
+        else{
+            console.log('User fetched:', data);
+            // Check if the user exists
+            if (!data) {
+                console.log('User not found');
+                return null;
+            }
+            return data;
+        }
+        
+    }
+
+    static async storeRefreshToken(userId, refreshToken) {
+        const { data, error } = await supabase
+            .from('users')
+            .update({ refresh_token: refreshToken })
+            .eq('user_id', userId);
+
+        if (error) {
+            console.error('Error storing refresh token:', error);
+            return null;
+        }
         return data;
     }
+    static async getRefreshToken(userId) {
+        const { data, error } = await supabase
+            .from('users')
+            .select('refresh_token')
+            .eq('user_id', userId)
+            .single();
+
+        if (error) {
+            console.error('Error fetching refresh token:', error);
+            return null;
+        }
+        return data.refresh_token;
+     }
+
+     static async invalidateToken(userId) {
+        const { data, error } = await supabase
+            .from('users')
+            .update({ refresh_token: null })
+            .eq('user_id', userId);
+
+        if (error) {
+            console.error('Error invalidating token:', error);
+            return null;
+        }
+        return data;
+     }
+     static async updatePassword(username, newHashedPassword) {
+        const { data, error } = await supabase
+            .from('users')
+            .update({ password_hash: newHashedPassword })
+            .eq('username', username);
+    
+        console.log('Updating password for:', username);
+        console.log('Supabase response:', data, error);
+    
+        if (error || !data || data.length === 0) {
+            console.error('Error updating password:', error);
+            return null;
+        }
+    
+        return data;
+    }  
+    
+
 }
 
-module.exports = User;
+module.exports = user;
