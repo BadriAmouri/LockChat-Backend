@@ -1,0 +1,22 @@
+
+
+POST https://lock-chat-backend.vercel.app/auth/register
+Content-Type: application/json
+
+{
+  "username": "cc",
+  "publicKey": "yourPublicKeyHere",
+  "email": "test@example.com",
+  "password": "password123"
+}
+
+// test it with the new api 
+POST https://lock-chat-backend.vercel.app/auth/register
+Content-Type: application/json
+
+{
+  "username": "Boooouba",
+  "publicKey": "yourPublicKeyHere",
+  "email": "test@example.com",
+  "password": "password123"
+}

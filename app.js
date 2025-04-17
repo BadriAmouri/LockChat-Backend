@@ -22,7 +22,10 @@ app.use(express.json());
 const chatroomRoutes = require('./src/routes/chatroomRoutes');
 app.use('/api', chatroomRoutes);
 
-const PORT = 5000;
+// Vercel expects you to export the app as the handler
+module.exports = app;
+
+const PORT = 5001;
 app.listen(PORT, () => console.log(`Server running on port ${PORT}`));
 
 
