@@ -201,9 +201,10 @@ class ChatroomController {
         try {
             const userId = req.user.user_id;
             const chatrooms = await Chatroom.getUserChatrooms(userId);
+            console.log("getUserChatrooms controller called successfully!");
             res.status(200).json(chatrooms);
         } catch (error) {
-            res.status(500).json({ error: error.message });
+            res.status(500).json({ error: error.message ,message: "problem from getUserChatrooms controller" });
         }
     }
 

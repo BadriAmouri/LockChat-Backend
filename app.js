@@ -15,7 +15,6 @@ app.use('/auth', authRoutes); // Use the auth routes
 app.use('/api/decryption', decryptionRoutes);
 app.use('/api/encryption', encryptionRoutes); 
 
-
 app.use(express.json());
 
 

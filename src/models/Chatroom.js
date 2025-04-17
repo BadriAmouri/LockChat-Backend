@@ -133,7 +133,8 @@ class Chatroom {
     static async getUserChatrooms(userId) {
         const { data, error } = await db
             .rpc('get_user_chatrooms_with_last_message', { user_id_param: parseInt(userId) }); // Ensure userId is an integer
-
+        console.log('Chatrooms fetched:', data);
+        // Check if the user exists
         if (error) throw new Error('Error fetching user chatrooms: ' + error.message);
         return data;
     }
