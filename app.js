@@ -22,6 +22,11 @@ app.use(express.json());
 const chatroomRoutes = require('./src/routes/chatroomRoutes');
 app.use('/api', chatroomRoutes);
 
+// Add this route to display the welcome message on the root URL
+app.get('/', (req, res) => {
+    res.send('Welcome to the LockChat Backend API!');
+  });
+
 // Vercel expects you to export the app as the handler
 module.exports = app;
 
