@@ -9,3 +9,8 @@ Content-Type: application/json
   "encryptedKeyForSender": "oZTD/o+0vdUZr+GxcWCAktOwrzzlLVpluOfkKJREG0WOZB7cJ9QxdoLQ3z+pUsPL",
   "encryptedKeyForRecipient": "6VSEq/TWW4yN/t2uJ15Hre4y5U5pdnbmxWpqYZGdJoL31FuM2ruUnTdAhjNLhWrL"
 }
+
+### Get chatrooms for the authenticated user
+GET http://localhost:5000/api/chatrooms/getAllChatrooms
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyX2lkIjo1NywidXNlcm5hbWUiOiJrdXJvbyIsImlhdCI6MTc0NDg5MDkwNywiZXhwIjoxNzQ1NDk1NzA3fQ.KWMa_zoV_JaP-p3Lmnn3kB6o3Diadq4hp405TmwilEM
+Content-Type: application/json
