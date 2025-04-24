@@ -29,8 +29,9 @@ app.get('/', (req, res) => {
 // Vercel expects you to export the app as the handler
 module.exports = app;
 
-const PORT = 5001;
-app.listen(PORT, () => console.log(`Server running on port ${PORT}`));
+// this one got removed for Deployment purposes 
+//const PORT = 5001;
+//app.listen(PORT, () => console.log(`Server running on port ${PORT}`));
 
 
 
