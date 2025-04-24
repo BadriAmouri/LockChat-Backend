@@ -21,6 +21,25 @@ app.use(express.json());
 const chatroomRoutes = require('./src/routes/chatroomRoutes');
 app.use('/api', chatroomRoutes);
 
+
+
+// Test the connection with Supabase
+app.get('/test-db-connection', async (req, res) => {
+  try {
+      // Query a table in your database (e.g., 'users')
+      const { data, error } = await supabase.from('users').select('*').limit(1);
+
+      if (error) {
+          return res.status(500).json({ success: false, message: 'Error querying database', error: error.message });
+      }
+
+      // If the query is successful, return the data
+      return res.status(200).json({ success: true, data });
+  } catch (err) {
+      return res.status(500).json({ success: false, message: 'Error connecting to Supabase', error: err.message });
+  }
+});
+
 // Add this route to display the welcome message on the root URL
 app.get('/', (req, res) => {
     res.send('Welcome to the LockChat Backend API!');
