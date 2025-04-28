@@ -62,7 +62,7 @@ class InvitationController {
 
       res.status(200).json({ 
         message: `Invitation ${action}ed successfully.`,
-        invitation: updatedInvitation
+        invitation: invitation
       });
     } catch (error) {
       console.error(error.message);
