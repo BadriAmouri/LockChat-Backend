@@ -71,12 +71,12 @@ try {
     console.error('❌ Failed to initialize WebSocket server:', err.message);
   }
 // this one got removed for Deployment purposes 
-//const PORT = 5001;
-//server.listen(PORT, () => console.log(`Server running on port ${PORT}`)); // <-- CHANGE app.listen to server.listen
+const PORT = 5001;
+server.listen(PORT, () => console.log(`Server running on port ${PORT}`)); // <-- CHANGE app.listen to server.listen
 
 
 // Vercel expects you to export the app as the handler
-module.exports = app;
+//module.exports = app;
 
 
 
