@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>WebSocket Chat</title>
+</head>
+<body>
+  <h1>WebSocket Chat</h1>
+
+  <!-- User Identification -->
+  <label for="userId">Enter your User ID:</label>
+  <input type="text" id="userId" placeholder="Enter your ID">
+  <button id="connectBtn">Connect</button>
+
+  <div id="status"></div>
+  <div id="messages"></div>
+
+  <label for="recipientId">Recipient ID:</label>
+  <input type="text" id="recipientId" placeholder="Enter recipient ID">
+  
+  <label for="message">Message:</label>
+  <input type="text" id="message" placeholder="Enter message">
+  <button id="sendMessageBtn">Send Message</button>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/4.0.1/socket.io.min.js"></script>
+  
+  <script>
+    let socket;
+    let userId;
+
+    document.getElementById('connectBtn').addEventListener('click', () => {
+      userId = document.getElementById('userId').value;
+      console.log(`Attempting to connect with User ID: ${userId}`);
+      if (userId) {
+        // Connect to WebSocket and pass userId as query parameter
+        socket = io('http://localhost:5001', {
+          query: { userId: userId } // Send the userId as part of the query parameter
+        });
+
+
+
+        socket.on('connect', () => {
+          console.log('Connected to WebSocket server');
+          document.getElementById('status').innerText = `Connected as ${userId}`;
+
+
+          socket.on('connected_message', (data) => {
+        console.log(data.message); // Should log: "You are connected, fruit!"
+        });
+
+          // Emit the user's status as "online"
+          socket.emit('update_status', { userId });
+          console.log(`Emitting update_status for ${userId}`);
+
+          // Handle typing status
+          socket.on('typing', (data) => {
+            console.log('Received typing status:', data);
+            document.getElementById('messages').innerText += `\n${data.senderId} is typing...`;
+          });
+
+          socket.on('stop_typing', (data) => {
+            console.log('Received stop_typing status:', data);
+            document.getElementById('messages').innerText += `\n${data.senderId} stopped typing.`;
+          });
+
+          // Receive messages
+          socket.on('receive_message', (data) => {
+            console.log('Received message from server:', data);
+            document.getElementById('messages').innerText += `\nMessage from ${data.senderId}: ${data.message}`;
+          });
+        });
+
+        socket.on('disconnect', () => {
+          console.log('Disconnected from WebSocket server');
+          document.getElementById('status').innerText = `Disconnected from WebSocket Server.`;
+        });
+      } else {
+        alert('Please enter a valid User ID.');
+      }
+    });
+
+    // Handle message sending
+    document.getElementById('sendMessageBtn').addEventListener('click', () => {
+      const recipientId = document.getElementById('recipientId').value;
+      const message = document.getElementById('message').value;
+
+      console.log('Sending message:', { recipientId, message });
+      if (recipientId && message) {
+        const messageData = {
+          senderId: userId,
+          recipientId,
+          message,
+        };
+        
+        // Emit the message to the server
+        console.log('Emitting send_message to server:', messageData);
+        socket.emit('send_message', messageData);
+        
+        // Simulate typing status
+        socket.emit('typing', { senderId: userId, recipientId });
+        console.log(`Emitting typing status for ${userId} to ${recipientId}`);
+
+        socket.on('receive_message', (data) => {
+    console.log('Received message from server:', data); // Log for debugging
+  document.getElementById('messages').innerText += `\nMessage from ${data.senderId}: ${data.message}`;
+});
+
+
+        setTimeout(() => {
+          socket.emit('stop_typing', { senderId: userId, recipientId });
+          console.log(`Emitting stop_typing for ${userId} to ${recipientId}`);
+        }, 2000); // Stop typing after 2 seconds
+      } else {
+        alert('Please enter both recipient ID and message.');
+      }
+    });
+  </script>
+</body>
+</html>
