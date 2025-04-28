@@ -1,5 +1,5 @@
 // controllers/websocketController.js
-const { getUserSocketId, updateUserSocketId } = require('../models/websocketModel');
+const { getUserSocketId, updateUserSocketId } = require('../models/webSocketModel');
 const { v4: uuidv4 } = require('uuid');
 
 async function handleSocketId(req, res) {
