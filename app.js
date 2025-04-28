@@ -4,6 +4,8 @@ const bodyParser = require('body-parser');
 const encryptionRoutes = require('./src/routes/encryptionRoutes');
 const decryptionRoutes = require('./src/routes/decryptionRoutes');
 const authRoutes = require('./src/routes/authRoutes');
+const chatroomRoutes = require('./src/routes/chatroomRoutes');
+const invitationRoutes = require('./src/routes/invitationRoutes')
 const cors = require('cors');
 
 
@@ -14,11 +16,8 @@ app.use(express.json()); // Middleware to parse JSON bodies
 app.use('/auth', authRoutes); // Use the auth routes
 app.use('/api/decryption', decryptionRoutes);
 app.use('/api/encryption', encryptionRoutes); 
-
+app.use('/api',invitationRoutes)
 app.use(express.json());
-
-
-const chatroomRoutes = require('./src/routes/chatroomRoutes');
 app.use('/api', chatroomRoutes);
 
 
@@ -49,8 +48,8 @@ app.get('/', (req, res) => {
 module.exports = app;
 
 // this one got removed for Deployment purposes 
-//const PORT = 5001;
-//app.listen(PORT, () => console.log(`Server running on port ${PORT}`));
+const PORT = 5001;
+app.listen(PORT, () => console.log(`Server running on port ${PORT}`));
 
 
 
