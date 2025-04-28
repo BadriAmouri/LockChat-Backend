@@ -51,5 +51,5 @@ app.get('/', (req, res) => {
 module.exports = app;
 
 // this one got removed for Deployment purposes 
-const PORT = 5001;
-app.listen(PORT, () => console.log(`Server running on port ${PORT}`));
+//const PORT = 5001;
+//app.listen(PORT, () => console.log(`Server running on port ${PORT}`));
