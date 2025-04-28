@@ -4,7 +4,7 @@ const axios = require('axios');
 let io;
 let users = {};
 
-const SOCKET_API_URL = 'http://localhost:5001/api/websocket/get-socket-id';
+const SOCKET_API_URL = 'https://lock-chat-backend.vercel.app/api/websocket/get-socket-id';
 
 async function getCustomSocketId(userId) {
   try {
