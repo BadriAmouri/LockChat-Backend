@@ -50,16 +50,20 @@ class InvitationController {
         return res.status(400).json({ message: "Invitation has already been responded to." });
       }
 
+      let updatedInvitation;
       if (action === 'accept') {
-        await Invitation.updateInvitationStatus(invitationId, 'accepted');
+        updatedInvitation = await Invitation.updateInvitationStatus(invitationId, 'accepted');
         // ⚡ Here you could trigger the chatroom creation if needed
       } else if (action === 'decline') {
-        await Invitation.updateInvitationStatus(invitationId, 'declined');
+        updatedInvitation = await Invitation.updateInvitationStatus(invitationId, 'declined');
       } else {
         return res.status(400).json({ message: "Invalid action. Must be 'accept' or 'decline'." });
       }
 
-      res.json({ message: `Invitation ${action}ed successfully.` });
+      res.status(200).json({ 
+        message: `Invitation ${action}ed successfully.`,
+        invitation: updatedInvitation
+      });
     } catch (error) {
       console.error(error.message);
       res.status(500).json({ message: error.message });

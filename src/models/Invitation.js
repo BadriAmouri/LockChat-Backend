@@ -29,7 +29,7 @@ class Invitation {
       .from('invitations')
       .update({ status: newStatus })
       .eq('invitation_id', invitationId)
-      .select()
+      .select('*')
       .single();
 
     if (error) throw new Error('Error updating invitation: ' + error.message);
