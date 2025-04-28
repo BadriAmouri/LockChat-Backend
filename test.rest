@@ -76,3 +76,13 @@ Content-Type: application/json
 {
   "user_id": 1
 }
+
+
+### GET Socket_ID  with Hosted version 
+POST https://lock-chat-backend.vercel.app/api/websocket/get-socket-id
+Content-Type: application/json
+
+
+{
+  "user_id": 1
+}

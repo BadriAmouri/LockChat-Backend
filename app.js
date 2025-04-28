@@ -64,12 +64,12 @@ app.get('/', (req, res) => {
 });
 
 // Initialize the WebSocket server and pass the HTTP server
-try {
-    initializeSocketServer(server);
-    console.log('✅ WebSocket server initialized successfully');
-  } catch (err) {
-    console.error('❌ Failed to initialize WebSocket server:', err.message);
-  }
+//try {
+  //  initializeSocketServer(server);
+  //  console.log('✅ WebSocket server initialized successfully');
+ // } catch (err) {
+   // console.error('❌ Failed to initialize WebSocket server:', err.message);
+ // }
 // this one got removed for Deployment purposes 
 const PORT = 5001;
 server.listen(PORT, () => console.log(`Server running on port ${PORT}`)); // <-- CHANGE app.listen to server.listen
