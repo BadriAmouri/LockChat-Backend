@@ -5,7 +5,7 @@ const UserModel = require('../models/User');
 class UserController{
 static async searchForUsers (req, res) {
   const { query } = req.query;
-  const currentUserId = req.user.id; // set by your auth middleware
+  const userId = req.user.user_id
 
   if (!query) {
     return res.status(400).json({ message: 'Query is required' });
