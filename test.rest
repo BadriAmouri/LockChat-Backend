@@ -86,3 +86,12 @@ Content-Type: application/json
 {
   "user_id": 1
 }
+
+### check user connectivity
+
+POST http://localhost:5001/api/websocket/check-user-connection
+Content-Type: application/json
+
+{
+  "userId": "1"   
+}
