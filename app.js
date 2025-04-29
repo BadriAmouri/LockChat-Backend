@@ -24,6 +24,7 @@ app.use('/api/decryption', decryptionRoutes);
 app.use('/api/encryption', encryptionRoutes); 
 app.use('/api', invitation); // <-- NEW: Use the invitation routes
 const chatroomRoutes = require('./src/routes/chatroomRoutes');
+app.use('/api/users', userRoutes);
 app.use('/api', chatroomRoutes);
 // Add the WebSocket routes
 app.use('/api/websocket', websocketRoutes);

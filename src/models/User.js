@@ -1,6 +1,6 @@
 const supabase = require('../config/db');
 
-class user {
+class UserModel {
 
     static async createUser(username,email,hashedPassword,publicKey){
         const {data , error } = await supabase
@@ -55,6 +55,19 @@ class user {
         }
         
     }
+
+
+    static async searchUsersByUsername(query, excludeUserId) {
+        const { data, error } = await db
+        .from('users')
+        .select('user_id, username,full_name')
+        .ilike('full_name', `%${query}%`)
+        .neq('user_id', excludeUserId); // exclude the current user
+
+        if (error) throw new Error(error.message);
+        return data;
+    }
+
 
     static async storeRefreshToken(userId, refreshToken) {
         const { data, error } = await supabase
@@ -114,4 +127,4 @@ class user {
 
 }
 
-module.exports = user;
+module.exports = UserModel;
