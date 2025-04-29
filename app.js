@@ -4,6 +4,7 @@ const bodyParser = require('body-parser');
 const encryptionRoutes = require('./src/routes/encryptionRoutes');
 const decryptionRoutes = require('./src/routes/decryptionRoutes');
 const authRoutes = require('./src/routes/authRoutes');
+const invitation = require ('./src/routes/invitationRoutes')
 const websocketRoutes = require('./src/routes/webSocketRoute'); // <-- NEW: Import WebSocket routes
 const cors = require('cors');
 const http = require('http'); // <-- NEW: Import http module
@@ -21,6 +22,7 @@ app.use(express.json());
 app.use('/auth', authRoutes); 
 app.use('/api/decryption', decryptionRoutes);
 app.use('/api/encryption', encryptionRoutes); 
+app.use('/api', invitation); // <-- NEW: Use the invitation routes
 const chatroomRoutes = require('./src/routes/chatroomRoutes');
 app.use('/api', chatroomRoutes);
 // Add the WebSocket routes
