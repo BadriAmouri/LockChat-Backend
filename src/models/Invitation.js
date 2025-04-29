@@ -37,26 +37,43 @@ class Invitation {
   }
 
   static async chatroomExistsBetweenUsers(user1, user2) {
-    const { data, error } = await db
+    // Get chatroom IDs for user1
+    const { data: user1Rooms, error: err1 } = await db
+      .from('chatroom_members')
+      .select('chatroom_id')
+      .eq('user_id', user1);
+  
+    if (err1) throw new Error('Error fetching chatrooms for user1: ' + err1.message);
+  
+    // Get chatroom IDs for user2
+    const { data: user2Rooms, error: err2 } = await db
+      .from('chatroom_members')
+      .select('chatroom_id')
+      .eq('user_id', user2);
+  
+    if (err2) throw new Error('Error fetching chatrooms for user2: ' + err2.message);
+  
+    // Extract IDs
+    const user1ChatroomIds = user1Rooms.map(r => r.chatroom_id);
+    const user2ChatroomIds = user2Rooms.map(r => r.chatroom_id);
+  
+    // Find intersection
+    const sharedChatroomIds = user1ChatroomIds.filter(id => user2ChatroomIds.includes(id));
+  
+    if (sharedChatroomIds.length === 0) return false;
+  
+    // Check if any shared chatroom is private
+    const { data: privateRooms, error: err3 } = await db
       .from('chatrooms')
       .select('chatroom_id')
-      .eq('is_private', true)
-      .in('chatroom_id', 
-        db
-          .from('chatroom_members')
-          .select('chatroom_id')
-          .eq('user_id', user1)
-      )
-      .in('chatroom_id', 
-        db
-          .from('chatroom_members')
-          .select('chatroom_id')
-          .eq('user_id', user2)
-      );
+      .in('chatroom_id', sharedChatroomIds)
+      .eq('is_private', true);
   
-    if (error) throw new Error('Error checking chatroom: ' + error.message);
-    return data.length > 0;
+    if (err3) throw new Error('Error checking private chatrooms: ' + err3.message);
+  
+    return privateRooms.length > 0;
   }
+  
   
   
   static async existingInvitationBetweenUsers(user1, user2) {
