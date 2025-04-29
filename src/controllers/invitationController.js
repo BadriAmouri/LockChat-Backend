@@ -4,12 +4,24 @@ class InvitationController {
   static async sendInvitation(req, res) {
     const inviterId = req.user.user_id;
     const { invitedUserId } = req.body;
-
+  
     try {
       if (inviterId === invitedUserId) {
         return res.status(400).json({ message: "You cannot invite yourself." });
       }
-
+  
+      // Check if they are already friends (chatroom exists)
+      const alreadyFriends = await Invitation.chatroomExistsBetweenUsers(inviterId, invitedUserId);
+      if (alreadyFriends) {
+        return res.status(400).json({ message: "You are already friends." });
+      }
+  
+      // Check if an invitation already exists in either direction
+      const alreadyInvited = await Invitation.existingInvitationBetweenUsers(inviterId, invitedUserId);
+      if (alreadyInvited) {
+        return res.status(400).json({ message: "An invitation already exists or has been accepted." });
+      }
+  
       const invitation = await Invitation.createInvitation(inviterId, invitedUserId);
       res.status(201).json(invitation);
     } catch (error) {
@@ -17,6 +29,7 @@ class InvitationController {
       res.status(500).json({ message: error.message });
     }
   }
+  
 
   static async getMyPendingInvitations(req, res) {
     const userId = req.user.user_id;
@@ -50,17 +63,19 @@ class InvitationController {
         return res.status(400).json({ message: "Invitation has already been responded to." });
       }
 
+      let updatedInvitation;
       if (action === 'accept') {
-        await Invitation.updateInvitationStatus(invitationId, 'accepted');
+        updatedInvitation = await Invitation.updateInvitationStatus(invitationId, 'accepted');
         // ⚡ Here you could trigger the chatroom creation if needed
       } else if (action === 'decline') {
-        await Invitation.updateInvitationStatus(invitationId, 'declined');
+        updatedInvitation = await Invitation.updateInvitationStatus(invitationId, 'declined');
       } else {
         return res.status(400).json({ message: "Invalid action. Must be 'accept' or 'decline'." });
       }
 
       res.json({ message: `Invitation ${action}ed successfully.` ,
         invitation: invitation
+
       });
     } catch (error) {
       console.error(error.message);
