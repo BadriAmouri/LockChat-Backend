@@ -1,4 +1,4 @@
-const supabase = require('../config/db');
+const db = require('../config/db');
 
 class UserModel {
 
