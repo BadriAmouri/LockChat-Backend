@@ -36,6 +36,28 @@ class Invitation {
     return data;
   }
 
+  static async chatroomExistsBetweenUsers(user1, user2) {
+    const { data, error } = await db
+      .from('chatrooms')
+      .select('chatroom_id')
+      .contains('participants', [user1, user2]);
+  
+    if (error) throw new Error('Error checking chatroom: ' + error.message);
+    return data.length > 0;
+  }
+  
+  static async existingInvitationBetweenUsers(user1, user2) {
+    const { data, error } = await db
+      .from('invitations')
+      .select('*')
+      .or(`and(inviter_id.eq.${user1},invited_user_id.eq.${user2}),and(inviter_id.eq.${user2},invited_user_id.eq.${user1})`)
+      .in('status', ['pending', 'accepted']);
+  
+    if (error) throw new Error('Error checking existing invitations: ' + error.message);
+    return data.length > 0;
+  }
+  
+
   static async getInvitationById(invitationId) {
     const { data, error } = await db
       .from('invitations')
