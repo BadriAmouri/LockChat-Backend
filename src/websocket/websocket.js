@@ -91,4 +91,9 @@ function initializeSocketServer(httpServer) {
   });
 }
 
-module.exports = { initializeSocketServer };
+
+function checkUserConnection(userId) {
+  return users.hasOwnProperty(userId); // Check if the userId exists in the users object
+}
+
+module.exports = { initializeSocketServer ,checkUserConnection };
