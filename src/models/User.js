@@ -1,4 +1,4 @@
-const db = require('../config/db');
+const supabase = require('../config/db');
 
 class UserModel {
 
@@ -58,7 +58,7 @@ class UserModel {
 
 
     static async searchUsersByUsername(query, excludeUserId) {
-        const { data, error } = await db
+        const { data, error } = await supabase
         .from('users')
         .select('user_id, username,full_name')
         .ilike('full_name', `%${query}%`)
