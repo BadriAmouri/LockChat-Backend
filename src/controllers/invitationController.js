@@ -73,9 +73,9 @@ class InvitationController {
         return res.status(400).json({ message: "Invalid action. Must be 'accept' or 'decline'." });
       }
 
-      res.status(200).json({ 
-        message: `Invitation ${action}ed successfully.`,
-        invitation: updatedInvitation
+      res.json({ message: `Invitation ${action}ed successfully.` ,
+        invitation: invitation
+
       });
     } catch (error) {
       console.error(error.message);

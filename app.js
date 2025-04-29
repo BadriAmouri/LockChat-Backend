@@ -4,53 +4,81 @@ const bodyParser = require('body-parser');
 const encryptionRoutes = require('./src/routes/encryptionRoutes');
 const decryptionRoutes = require('./src/routes/decryptionRoutes');
 const authRoutes = require('./src/routes/authRoutes');
-const chatroomRoutes = require('./src/routes/chatroomRoutes');
-const invitationRoutes = require('./src/routes/invitationRoutes')
+const invitation = require ('./src/routes/invitationRoutes')
+const websocketRoutes = require('./src/routes/webSocketRoute'); // <-- NEW: Import WebSocket routes
 const cors = require('cors');
-
+const http = require('http'); // <-- NEW: Import http module
+const { initializeSocketServer } = require('./src/websocket/websocket');
 
 const app = express();
+const server = http.createServer(app); // <-- NEW: create a server based on Express app
+
+// Middleware
 app.use(cors());
-app.use(bodyParser.json()); // To parse JSON bodies 
-app.use(express.json()); // Middleware to parse JSON bodies
-app.use('/auth', authRoutes); // Use the auth routes
+app.use(bodyParser.json()); 
+app.use(express.json());
+
+// Routes
+app.use('/auth', authRoutes); 
 app.use('/api/decryption', decryptionRoutes);
 app.use('/api/encryption', encryptionRoutes); 
-app.use('/api',invitationRoutes)
-app.use(express.json());
+app.use('/api', invitation); // <-- NEW: Use the invitation routes
+const chatroomRoutes = require('./src/routes/chatroomRoutes');
 app.use('/api', chatroomRoutes);
+// Add the WebSocket routes
+app.use('/api/websocket', websocketRoutes);
 
-
-
-// Test the connection with Supabase
+// Test DB Connection Route
 app.get('/test-db-connection', async (req, res) => {
   try {
-      // Query a table in your database (e.g., 'users')
+      console.log('SUPABASE_URL:', process.env.SUPABASE_URL);
+      console.log('SUPABASE_KEY:', process.env.SUPABASE_KEY ? 'KEY_PRESENT' : 'KEY_MISSING');
+
       const { data, error } = await supabase.from('users').select('*').limit(1);
 
       if (error) {
-          return res.status(500).json({ success: false, message: 'Error querying database', error: error.message });
+          console.error('Supabase Query Error:', error.message);
+          return res.status(500).json({
+              success: false,
+              message: 'Error querying database',
+              error: error.message
+          });
       }
 
-      // If the query is successful, return the data
-      return res.status(200).json({ success: true, data });
+      console.log('Query Success:', data);
+      return res.status(200).json({
+          success: true,
+          data
+      });
   } catch (err) {
-      return res.status(500).json({ success: false, message: 'Error connecting to Supabase', error: err.message });
+      console.error('Catch Error:', err.message);
+      return res.status(500).json({
+          success: false,
+          message: 'Error connecting to Supabase',
+          error: err.message
+      });
   }
 });
 
-// Add this route to display the welcome message on the root URL
+// Welcome Route
 app.get('/', (req, res) => {
-    res.send('Welcome to the LockChat Backend API!');
-  });
+  res.send('Welcome to the LockChat Backend API!');
+});
 
-// Vercel expects you to export the app as the handler
-module.exports = app;
-
+// Initialize the WebSocket server and pass the HTTP server
+try {
+    initializeSocketServer(server);
+    console.log('✅ WebSocket server initialized successfully');
+  } catch (err) {
+    console.error('❌ Failed to initialize WebSocket server:', err.message);
+  }
 // this one got removed for Deployment purposes 
 const PORT = 5001;
-app.listen(PORT, () => console.log(`Server running on port ${PORT}`));
+server.listen(PORT, () => console.log(`Server running on port ${PORT}`)); // <-- CHANGE app.listen to server.listen
 
+
+// Vercel expects you to export the app as the handler
+//module.exports = app;
 
 
 

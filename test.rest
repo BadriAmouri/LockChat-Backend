@@ -4,12 +4,85 @@ POST https://lock-chat-backend.vercel.app/auth/register
 Content-Type: application/json
 
 {
-  "username": "cc",
+  "username": "hey",
   "publicKey": "yourPublicKeyHere",
   "email": "test@example.com",
   "password": "password123"
 }
 
+### Get all chatrooms (with JWT token)
+GET https://lock-chat-backend.vercel.app/api/chatrooms/getAllChatrooms
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyX2lkIjo4MCwidXNlcm5hbWUiOiJiYWRyaSIsImlhdCI6MTc0NTU3NDA3MywiZXhwIjoxNzQ2MTc4ODczfQ.PRQume9Xr_ap1Wgv-JP4o0OZuz5Fk5RL1SZY7stvoKY
+Accept: application/json
+
+
+### Get all chatrooms (with JWT token)
+GET https://lock-chat-backend.vercel.app/api/chatrooms/getAllChatrooms
+Accept: application/json
 
 
 
+
+### Test Logout Endpoint
+
+# Test with valid refresh token
+POST https://lock-chat-backend.vercel.app/auth/logout
+Content-Type: application/json
+
+{
+    "refreshToken": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyX2lkIjo4MSwidXNlcm5hbWUiOiJtb3Vzc2EyMyIsImlhdCI6MTc0NTc3Mjc3NCwiZXhwIjoxNzQ2Mzc3NTc0fQ.DVYKuf1YuRMwGw0yQDA94-bpox1hhjksxOczjQIGDfA"
+}
+
+### Expected Response: 
+HTTP/1.1 200 OK
+{
+    "message": "User logged out successfully"
+}
+
+# Test with missing refresh token
+POST http://localhost:3000/logout
+Content-Type: application/json
+{}
+
+### Expected Response:
+HTTP/1.1 400 Bad Request
+{
+    "error": "Refresh token is required"
+}
+
+# Test with invalid refresh token
+POST http://localhost:3000/logout
+Content-Type: application/json
+{
+    "refreshToken": "invalid-refresh-token-example"
+}
+
+### Expected Response:
+HTTP/1.1 403 Forbidden
+{
+    "error": "Invalid refresh token"
+}
+
+
+
+
+
+
+### GET Socket_ID 
+POST http://localhost:5001/api/websocket/get-socket-id
+Content-Type: application/json
+
+
+{
+  "user_id": 1
+}
+
+
+### GET Socket_ID  with Hosted version 
+POST https://lock-chat-backend.vercel.app/api/websocket/get-socket-id
+Content-Type: application/json
+
+
+{
+  "user_id": 1
+}
