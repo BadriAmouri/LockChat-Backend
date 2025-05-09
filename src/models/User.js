@@ -61,7 +61,7 @@ class UserModel {
         const { data, error } = await supabase
         .from('users')
         .select('user_id, username,full_name')
-        .ilike('full_name', `%${query}%`)
+        .or(`full_name.ilike.%${query}%,username.ilike.%${query}%`)
         .neq('user_id', excludeUserId); // exclude the current user
 
         if (error) throw new Error(error.message);
