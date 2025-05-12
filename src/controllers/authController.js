@@ -4,10 +4,16 @@ const user = require("../models/User");
 
 exports.register = async (req, res) => {
     try {
-        const { username, email, password, publicKey } = req.body;
+        const { fullName, username, email, password, publicKey, profileImageUrl } = req.body;
 
+        console.log("🔑 Full Name  From send to backend ***********************: $fullName");
+        console.log("🔑 Username  From send to backend ***********************: $username");
+        console.log("🔑 Email  From send to backend ***********************: $email");
+        console.log("🔑 Password  From send to backend ***********************: $password");
+        console.log("🔑 Public Key  From send to backend ***********************: $publicKey");
+        console.log("🔑 Profile Image URL  From send to backend ***********************: $profileImageUrl");
         // Check if all the required fields are filled
-        if (!username || !email || !password || !publicKey) {
+        if (!fullName || !username || !email || !password || !publicKey) {
             return res.status(400).json({ success: false, error: "All fields are required" });
         }
 
@@ -20,8 +26,16 @@ exports.register = async (req, res) => {
         // Hash the password
         const hashedPassword = await bcrypt.hash(password, 16);
 
-        // Create the user in the database with the public key
-        const newUser = await user.createUser(username, email, hashedPassword, publicKey);
+        // Create the user in the database with the public key and profile image
+        const newUser = await user.createUser(
+            fullName,
+            username,
+            email,
+            hashedPassword,
+            publicKey,
+            profileImageUrl
+        );
+
         if (!newUser) {
             return res.status(500).json({ success: false, error: "Error creating user" });
         }

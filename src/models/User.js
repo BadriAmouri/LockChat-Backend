@@ -2,14 +2,16 @@ const supabase = require('../config/db');
 
 class UserModel {
 
-    static async createUser(username,email,hashedPassword,publicKey){
+    static async createUser(fullname,username,email,hashedPassword,publicKey, profileImageUrl = null){
         const {data , error } = await supabase
         .from('users')
         .insert({
+            full_name: fullname,
             username: username,
             email: email,
             password_hash: hashedPassword,
-            public_key: publicKey
+            public_key: publicKey,
+            profile_pic: profileImageUrl
         }).select('*')
         .single();
 
@@ -70,16 +72,16 @@ class UserModel {
 
 
     static async storeRefreshToken(userId, refreshToken) {
-        const { data, error } = await supabase
+        const { error } = await supabase
             .from('users')
             .update({ refresh_token: refreshToken })
             .eq('user_id', userId);
 
         if (error) {
             console.error('Error storing refresh token:', error);
-            return null;
+            return false;
         }
-        return data;
+        return true;
     }
     static async getRefreshToken(userId) {
         const { data, error } = await supabase
@@ -96,32 +98,32 @@ class UserModel {
      }
 
      static async invalidateToken(userId) {
-        const { data, error } = await supabase
+        const { error } = await supabase
             .from('users')
             .update({ refresh_token: null })
             .eq('user_id', userId);
 
         if (error) {
             console.error('Error invalidating token:', error);
-            return null;
+            return false;
         }
-        return data;
+        return true;
      }
      static async updatePassword(username, newHashedPassword) {
-        const { data, error } = await supabase
+        const { error } = await supabase
             .from('users')
             .update({ password_hash: newHashedPassword })
             .eq('username', username);
     
         console.log('Updating password for:', username);
-        console.log('Supabase response:', data, error);
+        console.log('Supabase response:', error);
     
-        if (error || !data || data.length === 0) {
+        if (error) {
             console.error('Error updating password:', error);
-            return null;
+            return false;
         }
     
-        return data;
+        return true;
     }  
     
 
