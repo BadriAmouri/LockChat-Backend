@@ -8,17 +8,17 @@ class KeyManagementService {
      * @param {string} senderId - The senderId's ID.
      * @returns {Promise<boolean>} True if a new key is needed.
      */
-        static async shouldRotateKey(senderId, recipientId) {
-            const { count, error } = await db
-                .from('messages')
-                .select('*', { count: 'exact' })
-                .eq('sender_id', senderId)
-                .eq('recipient_id', recipientId); // Count messages between sender and recipient
-        
-            if (error) throw new Error('Error checking message count: ' + error.message);
-        
-            return count % 100 === 0;
-        }
+static async shouldRotateKey(userId1, userId2) {
+    const { count, error } = await db
+        .from('messages')
+        .select('*', { count: 'exact' })
+        .or(`and(sender_id.eq.${userId1},recipient_id.eq.${userId2}),and(sender_id.eq.${userId2},recipient_id.eq.${userId1})`);
+
+    if (error) throw new Error('Error checking message count: ' + error.message);
+
+    return count % 100 === 0;
+}
+
         
         
     
