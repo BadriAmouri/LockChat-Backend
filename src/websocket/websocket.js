@@ -21,6 +21,8 @@ function initializeSocketServer(httpServer) {
     cors: {
       origin: '*',
       methods: ['GET', 'POST'],
+      pingInterval: 25000,  // Ping every 25s
+      pingTimeout: 60000,   // Wait 60s for pong before disconnecting
     },
   });
 
