@@ -125,8 +125,29 @@ class UserModel {
     
         return true;
     }  
-    
+    static async updateUsername(username, newUsername) {
+        const { error } = await supabase
+            .from('users')
+            .update({ username: newUsername })
+            .eq('username', username);
+        if (error){
+            console.error('Error updating username from user model:', error);
+            return false;   
+        }
+        return true;
+    }
 
+    static async updateEmail(username, newEmail) {
+        const { error } = await supabase
+            .from('users')
+            .update({ email: newEmail })
+            .eq('username', username);
+        if (error){
+            console.error('Error updating email from user model:', error);
+            return false;
+        }
+        return true;
+    }
 }
 
 module.exports = UserModel;
